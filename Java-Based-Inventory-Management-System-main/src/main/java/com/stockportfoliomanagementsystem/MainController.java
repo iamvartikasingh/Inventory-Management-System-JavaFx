@@ -122,11 +122,34 @@ public class MainController implements Initializable {
         return matcher.matches()||matcher1.matches();
     }
     public static boolean isPasswordValid(String password) {
+        return hasUpper(password, 0) && hasLower(password, 0) &&
+               hasDigit(password, 0) && hasSpecial(password, 0) &&
+               password.length() >= 8;
+    }
 
-        String regexPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=]).{8,}$";
-        Pattern pattern = Pattern.compile(regexPattern);
-        Matcher matcher = pattern.matcher(password);
-        return matcher.matches();
+    private static boolean hasUpper(String str, int i) {
+        if (i >= str.length()) return false;
+        if (Character.isUpperCase(str.charAt(i))) return true;
+        return hasUpper(str, i + 1);
+    }
+
+    private static boolean hasLower(String str, int i) {
+        if (i >= str.length()) return false;
+        if (Character.isLowerCase(str.charAt(i))) return true;
+        return hasLower(str, i + 1);
+    }
+
+    private static boolean hasDigit(String str, int i) {
+        if (i >= str.length()) return false;
+        if (Character.isDigit(str.charAt(i))) return true;
+        return hasDigit(str, i + 1);
+    }
+
+    private static boolean hasSpecial(String str, int i) {
+        if (i >= str.length()) return false;
+        char c = str.charAt(i);
+        if ("@#$%^&+=".indexOf(c) != -1) return true;
+        return hasSpecial(str, i + 1);
     }
 
     public static void fillAllTheFieldsAlert(){
