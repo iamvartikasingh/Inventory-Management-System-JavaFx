@@ -54,21 +54,20 @@ public class UpdateCustomer implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        String sql = "SELECT * FROM customer WHERE C_ID = ?";
-        try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1,cusID);
-            ResultSet rs = preparedStatement.executeQuery();
+    	String sql = "SELECT * FROM customer WHERE C_ID = ?";
+    	try {
+    	    PreparedStatement preparedStatement = conn.prepareStatement(sql);
+    	    preparedStatement.setString(1, cusID);
+    	    ResultSet rs = preparedStatement.executeQuery();
 
-            while(rs.next()){
-                cusName = rs.getString("C_Name");
-                cusAddress = rs.getString("C_Location");
-                cusContact = rs.getString("C_Contact");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+    	    while(rs.next()){
+    	        cusName = rs.getString("name");
+    	        cusAddress = rs.getString("address");
+    	        cusContact = rs.getString("contact");
+    	    }
+    	} catch (SQLException e) {
+    	    throw new RuntimeException(e);
+    	}
         txtCusID.setText(cusID);
         txtCusName.setText(cusName);
         txtCusAddress.setText(cusAddress);
@@ -118,7 +117,7 @@ public class UpdateCustomer implements Initializable {
         }else {
             if(MainController.isPhoneNumberValid(cusContact)) {
                 System.out.println("Valid Phone Number");
-                String sql = "UPDATE customer SET C_Name = ?, C_Location = ?, C_Contact = ? WHERE C_ID = ?";
+                String sql = "UPDATE customer SET name = ?, address = ?, contact = ? WHERE C_ID = ?";
                 try {
                     PreparedStatement pstmt = conn.prepareStatement(sql);
                     pstmt.setString(1, cusName);

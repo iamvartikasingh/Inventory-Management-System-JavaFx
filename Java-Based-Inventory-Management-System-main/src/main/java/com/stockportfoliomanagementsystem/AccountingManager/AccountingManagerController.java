@@ -248,7 +248,7 @@ public class AccountingManagerController implements Initializable {
                 total = rs.getDouble("TotalStock");
             }
             System.out.println(total);
-            lblAVG.setText("LKR "+total);
+            lblAVG.setText("$"+total);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -286,7 +286,7 @@ public class AccountingManagerController implements Initializable {
                 sold = rs.getDouble("Sold");
             }
             System.out.println(sold);
-            lblSold.setText("LKR "+sold);
+            lblSold.setText("$"+sold);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -304,7 +304,7 @@ public class AccountingManagerController implements Initializable {
                 bought= rs.getDouble("Bought");
             }
             System.out.println(bought);
-            lblBought.setText("LKR "+bought);
+            lblBought.setText("$"+bought);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

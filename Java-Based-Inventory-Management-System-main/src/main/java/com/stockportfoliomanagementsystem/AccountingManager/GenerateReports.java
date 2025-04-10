@@ -512,6 +512,8 @@ public class GenerateReports implements Initializable {
             Robot robot = new Robot();
             Rectangle rectangle = new Rectangle((int) boundX+7, (int) boundY+30,850,820);
             BufferedImage bi = robot.createScreenCapture(rectangle);
+//            new File("src/main/java/com/stockportfoliomanagementsystem/Reports/png").mkdirs();
+//            new File("src/main/java/com/stockportfoliomanagementsystem/Reports/pdf").mkdirs();
             ImageIO.write(bi, "png", new File("src/main/java/com/stockportfoliomanagementsystem/Reports/png/"+ imgFilename));
 
         } catch (AWTException e) {

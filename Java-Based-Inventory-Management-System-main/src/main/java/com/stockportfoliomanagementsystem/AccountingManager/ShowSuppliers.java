@@ -56,7 +56,7 @@ public class ShowSuppliers implements Initializable {
         columns.clear();
 
         // Define fixed column names
-        String[] columnNames = {"Supplier Id","Supplier Name","Contact Number","Description","Supplier Address"};
+        String[] columnNames = {"Supplier Id","Supplier Name","Supplier Address","Contact Number"};
 
         double columnWidth = (tblSuppliers.getPrefWidth()) / (columnNames.length)-2;
 
@@ -69,7 +69,7 @@ public class ShowSuppliers implements Initializable {
             columns.add(column);
         }
 
-        String sql = "SELECT * FROM supplier";
+        String sql = "SELECT S_ID, S_Name, S_Location, S_Contact FROM supplier";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
