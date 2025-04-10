@@ -263,7 +263,8 @@ public class StockKeeperController implements Initializable {
             if (rs.next()) {
                 total = rs.getObject("TotalStock") != null ? rs.getDouble("TotalStock") : 0.0;
             }
-            lblAVG.setText("LKR " + total);
+        
+            lblAVG.setText("$" + String.format("%.2f", total));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -294,7 +295,8 @@ public class StockKeeperController implements Initializable {
             if (rs.next()) {
                 sold = rs.getObject("Sold") != null ? rs.getDouble("Sold") : 0.0;
             }
-            lblSold.setText("LKR " + sold);
+           
+            lblSold.setText(String.format("$%.2f", sold));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -310,7 +312,7 @@ public class StockKeeperController implements Initializable {
             if (rs.next()) {
                 bought = rs.getObject("Bought") != null ? rs.getDouble("Bought") : 0.0;
             }
-            lblBought.setText("LKR " + bought);
+            lblBought.setText(String.format("$%.2f", bought));
         } catch (SQLException e) {
             e.printStackTrace();
         }

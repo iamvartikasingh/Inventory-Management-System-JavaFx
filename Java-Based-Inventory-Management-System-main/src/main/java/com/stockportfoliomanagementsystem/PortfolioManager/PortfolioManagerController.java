@@ -221,7 +221,9 @@ public class PortfolioManagerController implements Initializable{
                 total = rs.getDouble("TotalStock");
             }
             System.out.println(total);
-            lblAVG.setText("LKR "+total);
+           
+            lblAVG.setText("$" + String.format("%.2f", total));
+       
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -260,7 +262,8 @@ public class PortfolioManagerController implements Initializable{
                 sold = rs.getDouble("Sold");
             }
             System.out.println(sold);
-            lblSold.setText("LKR "+sold);
+          
+            lblSold.setText("$" + String.format("%.2f", sold));         
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -278,7 +281,9 @@ public class PortfolioManagerController implements Initializable{
                 bought= rs.getDouble("Bought");
             }
             System.out.println(bought);
-            lblBought.setText("LKR "+bought);
+           
+
+            lblBought.setText("$" + String.format("%.2f", bought));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
