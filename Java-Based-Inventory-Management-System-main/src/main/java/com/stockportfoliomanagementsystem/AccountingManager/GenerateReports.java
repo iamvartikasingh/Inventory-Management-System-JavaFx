@@ -219,7 +219,7 @@ public class GenerateReports implements Initializable {
                     "FROM " +
                     "stock " +
                     "JOIN " +
-                    "transactions_sup ON transactions_sup.P_ID = stock.P_ID " +
+                    "transactions_sup ON transactions_sup.StockID = stock.P_ID " +
                     "WHERE transactions_sup.Date_ = ? " + // Filter by date
                     "GROUP BY " +
                     "stock.P_ID, stock.P_Name, stock.Price_taken, stock.S_ID;";
@@ -268,7 +268,7 @@ public class GenerateReports implements Initializable {
                     "FROM " +
                     "stock " +
                     "JOIN " +
-                    "transactions_sup ON transactions_sup.P_ID = stock.P_ID " +
+                    "transactions_sup ON transactions_sup.StockID = stock.P_ID " +
                     "WHERE transactions_sup.Date_ = ?";
 
             try {
@@ -369,8 +369,7 @@ public class GenerateReports implements Initializable {
                 "stock.Selling_price* SUM(transactions_cus.Qty) AS Total " +
                 "FROM " +
                 "stock " +
-                "JOIN " +
-                "transactions_cus ON transactions_cus.P_ID = stock.P_ID " +
+                "JOIN transactions_cus ON transactions_cus.P_ID = stock.P_ID " +
                 "WHERE transactions_cus.Date_ = ? " +
                 "GROUP BY " +
                 "stock.P_ID, stock.P_Name, stock.Selling_price, stock.Price_taken, stock.S_ID;";
@@ -420,8 +419,8 @@ public class GenerateReports implements Initializable {
                 "(stock.Price_taken) * SUM(transactions_sup.Qty) AS Total " +
                 "FROM " +
                 "stock " +
-                "JOIN " +
-                "transactions_sup ON transactions_sup.P_ID = stock.P_ID " +
+              
+                "JOIN transactions_sup ON transactions_sup.StockID = stock.P_ID " +
                 "WHERE transactions_sup.Date_ = ? " + // Filter by date
                 "GROUP BY " +
                 "stock.P_ID, stock.P_Name, stock.Price_taken, stock.S_ID;";
@@ -469,8 +468,8 @@ public class GenerateReports implements Initializable {
                 "SUM((stock.Price_taken)*(transactions_sup.Qty)) AS Total " +
                 "FROM " +
                 "stock " +
-                "JOIN " +
-                "transactions_sup ON transactions_sup.P_ID = stock.P_ID " +
+               
+                "JOIN transactions_sup ON transactions_sup.StockID = stock.P_ID " +
                 "WHERE transactions_sup.Date_ = ?";
 
         try {
