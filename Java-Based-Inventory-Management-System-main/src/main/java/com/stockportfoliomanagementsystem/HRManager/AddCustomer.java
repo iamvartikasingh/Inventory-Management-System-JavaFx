@@ -113,11 +113,11 @@ public class AddCustomer implements Initializable{
         }else{
             if(MainController.isPhoneNumberValid(cusContact)) {
                 System.out.println("Valid");
-                String sql = "INSERT INTO customer (C_ID, C_Name, C_Location, C_Contact) VALUES (?, ?, ?, ?)";
+                String sql = "INSERT INTO customer (C_ID, name, address, contact) VALUES (?, ?, ?, ?)";
 
                 try {
                     PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, String.valueOf(numericId + 1));
+                    pstmt.setString(1, cusID); 
                     pstmt.setString(2, cusName);
                     pstmt.setString(3, cusAddress);
                     pstmt.setString(4, cusContact);

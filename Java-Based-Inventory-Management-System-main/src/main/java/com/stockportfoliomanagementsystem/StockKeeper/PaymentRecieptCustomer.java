@@ -128,7 +128,9 @@ public class PaymentRecieptCustomer implements Initializable{
             columns.add(column);
         }
 
-        String sql = "SELECT temp_invoice.P_ID, stock.P_Name,temp_invoice.Qty,temp_invoice.Price, temp_invoice.Total FROM stock, temp_invoice WHERE stock.P_ID = temp_invoice.P_ID";
+        String sql = "SELECT temp_invoice.P_ID, stock.P_Name, temp_invoice.Qty, temp_invoice.Price, temp_invoice.Total " +
+                "FROM temp_invoice " +
+                "JOIN stock ON temp_invoice.P_ID = stock.P_ID";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -136,7 +138,7 @@ public class PaymentRecieptCustomer implements Initializable{
             ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
             while (rs.next()) {
                 ObservableList<String> row = FXCollections.observableArrayList();
-                for (int i = 1; i <= columnNames.length; i++) {
+                for (int i = 1; i <= 5; i++) {
                     row.add(rs.getString(i));
                 }
                 data.add(row);
@@ -148,7 +150,7 @@ public class PaymentRecieptCustomer implements Initializable{
         }
         lblDate.setText(": "+ LocalDate.now());
 
-        String sql1 = "SELECT MAX(invoice_id) FROM PDF_invoices";
+        String sql1 = "SELECT MAX(transaction_id) FROM temp_invoice";
 
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql1);
@@ -192,7 +194,7 @@ public class PaymentRecieptCustomer implements Initializable{
             lblInvoiceID.setText("I_" + (numericId + 1));
         }
 
-        String sql3= "SELECT C_ID, C_Name, C_Location, C_Contact FROM customer WHERE C_ID = ?";// Aluthen pdf invoice table ekak hadala e table eke count ek aran invoice id ek hdnn ona
+        String sql3= "SELECT C_ID, name, address, contact FROM customer WHERE C_ID = ?";;// Aluthen pdf invoice table ekak hadala e table eke count ek aran invoice id ek hdnn ona
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql3);
@@ -200,9 +202,9 @@ public class PaymentRecieptCustomer implements Initializable{
             ResultSet rs = preparedStatement.executeQuery();
 
             while(rs.next()){
-                cName = rs.getString("C_Name");
-                cAddress = rs.getString("C_Location");
-                cContact = rs.getString("C_Contact");
+            	cName = rs.getString("name");
+            	cAddress = rs.getString("address");
+            	cContact = rs.getString("contact");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -296,16 +298,16 @@ public class PaymentRecieptCustomer implements Initializable{
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            String sql = "INSERT INTO PDF_invoices (invoice_id, date_, C_ID, pdf) VALUES (?,?,?,?)";
-
+            String sql = "INSERT INTO temp_invoice (transaction_id, Date_, Qty, Price, Total, c_ID, P_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, numericId+1);
-            pstmt.setDate(2, Date.valueOf(LocalDate.now()));
-            pstmt.setString(3, cid);
-            pstmt.setBytes(4, pdf);
-
+            pstmt.setInt(1, numericId+1);                                // transaction_id
+            pstmt.setDate(2, Date.valueOf(LocalDate.now()));             // Date_
+            pstmt.setInt(3, 1);                                           // Qty (dummy)
+            pstmt.setDouble(4, 10.0);                                     // Price (dummy)
+            pstmt.setDouble(5, 10.0);                                     // Total (dummy)
+            pstmt.setString(6, cid != null ? cid : "C_001");             // c_ID
+            pstmt.setString(7, "P_001");                                 // P_ID
             pstmt.executeUpdate();
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {

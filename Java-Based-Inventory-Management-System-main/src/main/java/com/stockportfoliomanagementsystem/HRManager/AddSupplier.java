@@ -60,6 +60,8 @@ public class AddSupplier implements Initializable {
     void onReports(MouseEvent event) {
         //To complete -----------------------------------------------------------------
     }
+  
+    
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         String sql2 = "SELECT MAX(S_ID) FROM supplier";
@@ -67,74 +69,103 @@ public class AddSupplier implements Initializable {
             PreparedStatement pstmt = conn.prepareStatement(sql2);
             ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                max = rs.getString(1);
-                System.out.println("Last : "+max);
+            String lastId = null;
+            if (rs.next()) {
+                lastId = rs.getString(1);
             }
-            Pattern pattern = Pattern.compile("\\d+");
 
-            // Use a Matcher to find the numeric part
-            Matcher matcher = pattern.matcher(max);
-
-            if (matcher.find()) {
-                // Extract the numeric part as a string
-                String numericPart = matcher.group();
-
-                // Convert the numeric part to an integer if needed
-                numericId = Integer.parseInt(numericPart);
-
-                // Now you have the numeric ID as an integer
-                System.out.println("Numeric ID: " + numericId);
-            } else {
-                System.out.println("No numeric part found in the C_ID value.");
+            int nextId = 1;
+            if (lastId != null) {
+                Pattern pattern = Pattern.compile("\\d+");
+                Matcher matcher = pattern.matcher(lastId);
+                if (matcher.find()) {
+                    nextId = Integer.parseInt(matcher.group()) + 1;
+                }
             }
+
+            String formattedId = String.format("S_%03d", nextId);
+            txtSupID.setText(formattedId);
+            txtSupID.setEditable(false);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        if(numericId == 0){
-            txtSupID.setText("S001");
-        }else if(numericId < 9) {
-            txtSupID.setText("S00" + (numericId + 1));
-        }else if(numericId < 99){
-            txtSupID.setText("S0" + (numericId + 1));
-        }else{
-            txtSupID.setText("S" + (numericId + 1));
-        }
-        txtSupID.setEditable(false);
     }
+//    public void initialize(URL url, ResourceBundle resourceBundle) {
+//        String sql2 = "SELECT MAX(S_ID) FROM supplier";
+//        try {
+//            PreparedStatement pstmt = conn.prepareStatement(sql2);
+//            ResultSet rs = pstmt.executeQuery();
+//
+//            while (rs.next()) {
+//                max = rs.getString(1);
+//                System.out.println("Last : "+max);
+//            }
+//            Pattern pattern = Pattern.compile("\\d+");
+//
+//            // Use a Matcher to find the numeric part
+//            Matcher matcher = pattern.matcher(max);
+//
+//            if (matcher.find()) {
+//                // Extract the numeric part as a string
+//                String numericPart = matcher.group();
+//
+//                // Convert the numeric part to an integer if needed
+//                numericId = Integer.parseInt(numericPart);
+//
+//                // Now you have the numeric ID as an integer
+//                System.out.println("Numeric ID: " + numericId);
+//            } else {
+//                System.out.println("No numeric part found in the C_ID value.");
+//            }
+//
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        if(numericId == 0){
+//            txtSupID.setText("S001");
+//        }else if(numericId < 9) {
+//            txtSupID.setText("S00" + (numericId + 1));
+//        }else if(numericId < 99){
+//            txtSupID.setText("S0" + (numericId + 1));
+//        }else{
+//            txtSupID.setText("S" + (numericId + 1));
+//        }
+//        txtSupID.setEditable(false);
+//    }
     @FXML
-    void onAddButton(MouseEvent event) {
-        supName = txtSupName.getText();
-        supAddress = txtSupAddress.getText();
-        supContact = txtSupContact.getText();
-        supID = txtSupID.getText();
 
-        if((supName.isEmpty())||(supAddress.isEmpty()||(supContact.isEmpty()||supID.isEmpty()))){
-            MainController.fillAllTheFieldsAlert();
-        }else{
-            if(MainController.isPhoneNumberValid(supContact)) {
-                String sql = "INSERT INTO supplier (S_ID, S_Name, S_Location, S_Contact) VALUES (?, ?, ?, ?)";
+    	void onAddButton(MouseEvent event) {
+    	    supName = txtSupName.getText();
+    	    supAddress = txtSupAddress.getText();
+    	    supContact = txtSupContact.getText();
+    	    supID = txtSupID.getText(); // <- Already formatted like "S_004"
 
-                try {
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, String.valueOf(numericId + 1));
-                    pstmt.setString(2, supName);
-                    pstmt.setString(3, supAddress);
-                    pstmt.setString(4, supContact);
-                    pstmt.executeUpdate();
+    	    if ((supName.isEmpty()) || (supAddress.isEmpty()) || (supContact.isEmpty()) || (supID.isEmpty())) {
+    	        MainController.fillAllTheFieldsAlert();
+    	    } else {
+    	        if (MainController.isPhoneNumberValid(supContact)) {
+    	            String sql = "INSERT INTO supplier (S_ID, S_Name, S_Location, S_Contact) VALUES (?, ?, ?, ?)";
 
-                } catch (SQLException e) {
-                    System.out.println("Error : " + e.getMessage());
-                }
+    	            try {
+    	                PreparedStatement pstmt = conn.prepareStatement(sql);
+    	                pstmt.setString(1, supID); // <- Use the formatted ID
+    	                pstmt.setString(2, supName);
+    	                pstmt.setString(3, supAddress);
+    	                pstmt.setString(4, supContact);
+    	                pstmt.executeUpdate();
 
-                lblSuccess.setText("Customer Added Successfully");
-            }else{
-                MainController.invalidPhoneNumberAlert();
-            }
-        }
-    }
+    	                lblSuccess.setText("Supplier Added Successfully");
+    	            } catch (SQLException e) {
+    	                System.out.println("Error : " + e.getMessage());
+    	            }
+    	        } else {
+    	            MainController.invalidPhoneNumberAlert();
+    	        }
+    	    }
+    	}
+    
     @FXML
     void onBackButton(MouseEvent event) {
         try {

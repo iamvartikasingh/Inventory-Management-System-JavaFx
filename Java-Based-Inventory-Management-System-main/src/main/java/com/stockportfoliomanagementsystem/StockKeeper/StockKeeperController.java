@@ -20,7 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-
+import javafx.scene.control.SelectionMode;
 import java.io.*;
 import java.net.URL;
 import java.sql.*;
@@ -116,19 +116,26 @@ public class StockKeeperController implements Initializable {
     }
 
 
+   
     @FXML
     void onInvoiceButton(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/ShowInvoices.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/ShowInvoices.fxml"));
+            Parent root = loader.load();
+
+            // This is where your controller's initialize() gets triggered
+            ShowInvoices controller = loader.getController();
+            System.out.println("✅ ShowInvoices Controller initialized");
+
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setHeight(700);
-            stage.setWidth(1210);
             scene = new Scene(root);
             stage.setScene(scene);
+            stage.setHeight(700);
+            stage.setWidth(1210);
             stage.setResizable(false);
             stage.show();
-        } catch (NullPointerException e) {
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();  // log the error to know if FXML is breaking
         }
     }
     @FXML
@@ -221,12 +228,13 @@ public class StockKeeperController implements Initializable {
         }
     }
 
+  
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        loadFromDB();
-    }
-    
-    
+  
+    	public void initialize(URL url, ResourceBundle resourceBundle) {
+    	  
+    	    loadFromDB();
+    	}
     private void loadFromDB() {
         // Load profile picture if available
         String picQuery = "SELECT Pic FROM Users WHERE Username = ?";

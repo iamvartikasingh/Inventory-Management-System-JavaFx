@@ -294,15 +294,13 @@ public class BuyyExisting implements Initializable {
             showCustomDialog();
         }
     }
+    
+    
+ // ... (everything above remains the same)
 
     private void buyProducts() {
         ObservableList<ObservableList<String>> table = tblCart.getItems();
-
         int rowCount = table.size();
-        System.out.println("Row count: " + rowCount);
-
-
-        System.out.println(table.size());
 
         if(rowCount > 0){
             for (ObservableList<String> cartItem2 : tblCart.getItems()) {
@@ -310,107 +308,199 @@ public class BuyyExisting implements Initializable {
                 try {
                     PreparedStatement pstmt = conn.prepareStatement(count);
                     ResultSet rs = pstmt.executeQuery();
-
                     while (rs.next()) {
                         max = rs.getString(1);
-                        System.out.println("Last : "+max);
                     }
+                    if(max == null) max = "T_000";
+
                     Pattern pattern = Pattern.compile("\\d+");
-
-                    if(max == null){
-                        max = "T_000";
-                    }
-                    // Use a Matcher to find the numeric part
                     Matcher matcher = pattern.matcher(max);
-
                     if (matcher.find()) {
-                        // Extract the numeric part as a string
-                        String numericPart = matcher.group();
-
-                        // Convert the numeric part to an integer if needed
-                        numericId = Integer.parseInt(numericPart);
-
-                        // Now you have the numeric ID as an integer
-                        System.out.println("Numeric ID: " + numericId);
-                    } else {
-                        System.out.println("No numeric part found in the C_ID value.");
+                        numericId = Integer.parseInt(matcher.group());
                     }
-
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
 
-                String sql = "INSERT INTO transactions_sup (transaction_id, Date_, Qty, Total, SupplierID, StockID) VALUES (?, ?, ?, ?, ?, ?)";
+                // FIXED FIELD ORDER TO MATCH DB
+                String sql = "INSERT INTO transactions_sup (S_ID, StockID, Qty, Total, Date_, transaction_id) VALUES (?, ?, ?, ?, ?, ?)";
                 try {
-                	PreparedStatement pstmt = conn.prepareStatement(sql);
-                	pstmt.setString(1, String.valueOf(numericId + 1)); // transaction_id
-                	pstmt.setDate(2, Date.valueOf(LocalDate.now()));   // Date_
-                	pstmt.setInt(3, Integer.parseInt(cartItem2.get(5))); // Qty
-                	double priceTaken = Double.parseDouble(cartItem2.get(2));
-                	int qty = Integer.parseInt(cartItem2.get(5));
-                	pstmt.setDouble(4, priceTaken * qty);              // Total
-                	pstmt.setString(5, index);                         // SupplierID
-                	pstmt.setString(6, cartItem2.get(0));              // StockID
-
+                    PreparedStatement pstmt = conn.prepareStatement(sql);
+                    pstmt.setString(1, index);                                //  S_ID
+                    pstmt.setString(2, cartItem2.get(0));                     // StockID
+                    int qty = Integer.parseInt(cartItem2.get(5));
+                    double priceTaken = Double.parseDouble(cartItem2.get(2));
+                    pstmt.setInt(3, qty);                                     // Qty
+                    pstmt.setDouble(4, priceTaken * qty);                     // Total
+                    pstmt.setDate(5, Date.valueOf(LocalDate.now()));          // Date_
+                    pstmt.setString(6, String.format("T_%03d", numericId + 1)); // transaction_id
                     pstmt.executeUpdate();
-
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
 
+                // FIXED FIELD ORDER FOR temp_invoice_sup
                 String sql2 = "INSERT INTO temp_invoice_sup (transaction_id, Date_, Qty, Total, SupplierID, StockID) VALUES (?, ?, ?, ?, ?, ?)";
                 try {
                     PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-                    pstmt2.setString(1, String.valueOf(numericId + 1)); // transaction_id
-                    pstmt2.setDate(2, Date.valueOf(LocalDate.now()));   // Date_
                     int qty = Integer.parseInt(cartItem2.get(5));
                     double price = Double.parseDouble(cartItem2.get(2));
-                    pstmt2.setInt(3, qty);                             // Qty
-                    pstmt2.setDouble(4, price * qty);                  // Total
-                    pstmt2.setString(5, index);                        // SupplierID
-                    pstmt2.setString(6, cartItem2.get(0));             // StockID
+
+                    pstmt2.setString(1, String.format("T_%03d", numericId + 1)); // transaction_id
+                    pstmt2.setDate(2, Date.valueOf(LocalDate.now()));           // Date_
+                    pstmt2.setInt(3, qty);                                      // Qty
+                    pstmt2.setDouble(4, price * qty);                           // Total
+                    pstmt2.setString(5, index);                                 // SupplierID
+                    pstmt2.setString(6, cartItem2.get(0));                      // StockID
 
                     pstmt2.executeUpdate();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-                System.out.println("DB updated");
+
                 StockKeeperController.dbUpdate();
                 loadFromDB();
             }
-            ObservableList<ObservableList<String>> data = tblCart.getItems();
-            data.clear();
+            tblCart.getItems().clear();
             lblSuccess.setText("Products Bought Successfully");
 
-            String sql4 = "SELECT SUM(Total) AS TT FROM temp_invoice_sup";
-
             try {
-                PreparedStatement ps = conn.prepareStatement(sql4);
+                PreparedStatement ps = conn.prepareStatement("SELECT SUM(Total) AS TT FROM temp_invoice_sup");
                 ResultSet rs = ps.executeQuery();
-
-                while (rs.next()){
+                while (rs.next()) {
                     total = rs.getDouble(1);
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+                lblTotal.setText(String.valueOf(total));
 
-            lblTotal.setText(String.valueOf(total));
-
-            String sql5 = "DELETE FROM temp_invoice_sup";
-
-            try {
-                PreparedStatement pstmt2 = conn.prepareStatement(sql5);
+                PreparedStatement pstmt2 = conn.prepareStatement("DELETE FROM temp_invoice_sup");
                 pstmt2.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-
-        }else{
+        } else {
             showTableEmptyDialog();
         }
-
     }
+
+// ... (everything below remains the same)
+
+
+//    private void buyProducts() {
+//        ObservableList<ObservableList<String>> table = tblCart.getItems();
+//
+//        int rowCount = table.size();
+//        System.out.println("Row count: " + rowCount);
+//
+//
+//        System.out.println(table.size());
+//
+//        if(rowCount > 0){
+//            for (ObservableList<String> cartItem2 : tblCart.getItems()) {
+//                String count = "SELECT MAX(transaction_id) FROM transactions_sup";
+//                try {
+//                    PreparedStatement pstmt = conn.prepareStatement(count);
+//                    ResultSet rs = pstmt.executeQuery();
+//
+//                    while (rs.next()) {
+//                        max = rs.getString(1);
+//                        System.out.println("Last : "+max);
+//                    }
+//                    Pattern pattern = Pattern.compile("\\d+");
+//
+//                    if(max == null){
+//                        max = "T_000";
+//                    }
+//                    // Use a Matcher to find the numeric part
+//                    Matcher matcher = pattern.matcher(max);
+//
+//                    if (matcher.find()) {
+//                        // Extract the numeric part as a string
+//                        String numericPart = matcher.group();
+//
+//                        // Convert the numeric part to an integer if needed
+//                        numericId = Integer.parseInt(numericPart);
+//
+//                        // Now you have the numeric ID as an integer
+//                        System.out.println("Numeric ID: " + numericId);
+//                    } else {
+//                        System.out.println("No numeric part found in the C_ID value.");
+//                    }
+//
+//                } catch (SQLException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//                String sql = "INSERT INTO transactions_sup (transaction_id, Date_, Qty, Total, SupplierID, StockID) VALUES (?, ?, ?, ?, ?, ?)";
+//                try {
+//                	PreparedStatement pstmt = conn.prepareStatement(sql);
+//                	pstmt.setString(1, String.valueOf(numericId + 1)); // transaction_id
+//                	pstmt.setDate(2, Date.valueOf(LocalDate.now()));   // Date_
+//                	pstmt.setInt(3, Integer.parseInt(cartItem2.get(5))); // Qty
+//                	double priceTaken = Double.parseDouble(cartItem2.get(2));
+//                	int qty = Integer.parseInt(cartItem2.get(5));
+//                	pstmt.setDouble(4, priceTaken * qty);              // Total
+//                	pstmt.setString(5, index);                         // SupplierID
+//                	pstmt.setString(6, cartItem2.get(0));              // StockID
+//
+//                    pstmt.executeUpdate();
+//
+//                } catch (SQLException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//                String sql2 = "INSERT INTO temp_invoice_sup (transaction_id, Date_, Qty, Total, SupplierID, StockID) VALUES (?, ?, ?, ?, ?, ?)";
+//                try {
+//                    PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+//                    pstmt2.setString(1, String.valueOf(numericId + 1)); // transaction_id
+//                    pstmt2.setDate(2, Date.valueOf(LocalDate.now()));   // Date_
+//                    int qty = Integer.parseInt(cartItem2.get(5));
+//                    double price = Double.parseDouble(cartItem2.get(2));
+//                    pstmt2.setInt(3, qty);                             // Qty
+//                    pstmt2.setDouble(4, price * qty);                  // Total
+//                    pstmt2.setString(5, index);                        // SupplierID
+//                    pstmt2.setString(6, cartItem2.get(0));             // StockID
+//
+//                    pstmt2.executeUpdate();
+//                } catch (SQLException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                System.out.println("DB updated");
+//                StockKeeperController.dbUpdate();
+//                loadFromDB();
+//            }
+//            ObservableList<ObservableList<String>> data = tblCart.getItems();
+//            data.clear();
+//            lblSuccess.setText("Products Bought Successfully");
+//
+//            String sql4 = "SELECT SUM(Total) AS TT FROM temp_invoice_sup";
+//
+//            try {
+//                PreparedStatement ps = conn.prepareStatement(sql4);
+//                ResultSet rs = ps.executeQuery();
+//
+//                while (rs.next()){
+//                    total = rs.getDouble(1);
+//                }
+//            } catch (SQLException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            lblTotal.setText(String.valueOf(total));
+//
+//            String sql5 = "DELETE FROM temp_invoice_sup";
+//
+//            try {
+//                PreparedStatement pstmt2 = conn.prepareStatement(sql5);
+//                pstmt2.executeUpdate();
+//            } catch (SQLException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//        }else{
+//            showTableEmptyDialog();
+//        }
+//
+//    }
 
     public void showTableEmptyDialog() {
         Stage dialog = new Stage();

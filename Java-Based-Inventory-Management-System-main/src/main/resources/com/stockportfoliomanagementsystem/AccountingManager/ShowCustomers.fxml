@@ -15,7 +15,7 @@
     <children>
         <Pane layoutX="-2.0" layoutY="-7.0" prefHeight="667.0" prefWidth="280.0" style="-fx-background-color: #075E54;">
             <children>
-                <Label layoutX="96.0" layoutY="20.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Book Nook" textAlignment="CENTER" textFill="#c0e8fb">
+                  <Label layoutX="96.0" layoutY="20.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Invatron" textAlignment="CENTER" textFill="#c0e8fb">
                     <font>
                         <Font name="Bookshelf Symbol 7" size="34.0" />
                     </font>

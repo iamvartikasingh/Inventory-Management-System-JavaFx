@@ -92,7 +92,7 @@ public class viewSuppliers implements Initializable {
         columns.clear();
 
         // Define fixed column names
-        String[] columnNames = {"Supplier Id","Supplier Name","Contact Number","Description","Supplier Address"};
+        String[] columnNames = {"Supplier Id", "Supplier Name", "Location", "Contact"};
 
         double columnWidth = (tblSuppliers.getPrefWidth()) / (columnNames.length)-2;
 

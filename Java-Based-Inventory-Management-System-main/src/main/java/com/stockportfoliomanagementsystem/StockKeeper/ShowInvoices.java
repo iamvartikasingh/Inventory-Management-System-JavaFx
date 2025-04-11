@@ -14,15 +14,12 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
-import java.awt.*;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,106 +29,27 @@ import java.util.ResourceBundle;
 public class ShowInvoices implements Initializable {
 
     Connection conn = MySqlCon.MysqlMethod();
+
     @FXML
     private Stage stage;
     private Scene scene;
     private Parent root;
+
     @FXML
     private TableView<ObservableList<String>> tblInvoices;
-    private InputStream pdfInputStream;
 
     @FXML
     void onBackButton(MouseEvent event) {
         try {
             root = FXMLLoader.load(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/StockKeeperDashboard.fxml"));
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            stage.setHeight(700);
-            stage.setWidth(1210);
             scene = new Scene(root);
             stage.setScene(scene);
-            stage.setResizable(false);
-            stage.show();
-        } catch (NullPointerException e) {
-        } catch (IOException e) {
-        }
-    }
-
-    @FXML
-    void onBuyProduct(MouseEvent event) throws IOException {
-        try {
-            root = FXMLLoader.load(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/SelectSupplierType.fxml"));
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setHeight(700);
             stage.setWidth(1210);
-            scene = new Scene(root);
-            stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
-        } catch (IOException e) {
-            throw new IOException(e);
-        } catch (NullPointerException e) {
-        }
-    }
-
-    @FXML
-    void onDeleteButton(MouseEvent event) {
-        int selectedIndex = tblInvoices.getSelectionModel().getSelectedIndex();
-
-        if (selectedIndex >= 0) {
-            ObservableList<String> selectedRow = tblInvoices.getItems().get(selectedIndex);
-            String r_id = selectedRow.get(0);
-
-            tblInvoices.getItems().remove(selectedIndex);
-
-            String sql = "DELETE FROM PDF_invoices WHERE invoice_id = ?";
-            try {
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1,r_id);
-                pstmt.executeUpdate();
-                System.out.println("Row deleted");
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @FXML
-    void onOpenButton(MouseEvent event) {
-        int selectedIndex = tblInvoices.getSelectionModel().getSelectedIndex();
-
-        if (selectedIndex >= 0) {
-            ObservableList<String> selectedRow = tblInvoices.getItems().get(selectedIndex);
-            String r_id = selectedRow.get(0);
-
-            String sql = "SELECT pdf FROM PDF_invoices WHERE invoice_id = ?";
-            try {
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1,r_id);
-                ResultSet rs = pstmt.executeQuery();
-
-                if(rs.next()){
-                    pdfInputStream = rs.getBinaryStream("pdf");
-                }
-                showPDF(pdfInputStream);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void showPDF(InputStream pdfInputStream) {
-        try {
-            Path tempPdfFile = Files.createTempFile("temp_pdf_", ".pdf");
-            try (FileOutputStream fos = new FileOutputStream(tempPdfFile.toFile())) {
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = pdfInputStream.read(buffer)) != -1) {
-                    fos.write(buffer, 0, bytesRead);
-                }
-            }
-            // Open the temporary PDF file with the default PDF viewer
-            Desktop.getDesktop().open(tempPdfFile.toFile());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -139,13 +57,10 @@ public class ShowInvoices implements Initializable {
     private void loadFromDB(){
         ObservableList<TableColumn<ObservableList<String>, ?>> columns = tblInvoices.getColumns();
         columns.clear();
-
-        // Define fixed column names
-        String[] columnNames = {"Invoice ID", "Date", "Customer ID"};
-
+        String[] columnNames = {"Transaction ID", "Date", "Quantity", "Price", "Total", "Customer ID", "Product ID"};
+     
         double columnWidth = tblInvoices.getPrefWidth() / columnNames.length;
 
-        // Add the columns to the TableView with fixed names
         for (int i = 0; i < columnNames.length; i++) {
             final int columnIndex = i;
             TableColumn<ObservableList<String>, String> column = new TableColumn<>(columnNames[i]);
@@ -154,7 +69,8 @@ public class ShowInvoices implements Initializable {
             columns.add(column);
         }
 
-        String sql = "SELECT invoice_id, date_,C_ID  FROM PDF_invoices";
+        String sql = "SELECT transaction_id, Date_, Qty, Price, Total, c_ID, P_ID FROM temp_invoice";     // SQL query must match
+
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -173,7 +89,36 @@ public class ShowInvoices implements Initializable {
             e.printStackTrace();
         }
     }
+    @FXML
+  
+    void onOpenButton(MouseEvent event) {
+        System.out.println("Open button clicked");
 
+        ObservableList<String> selectedRow = tblInvoices.getSelectionModel().getSelectedItem();
+
+        if (selectedRow != null) {
+            System.out.println("Selected Invoice: " + selectedRow);
+
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/PaymentRecieptCustomer.fxml"));
+                Parent root = fxmlLoader.load();
+
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL); // Optional
+                stage.initStyle(StageStyle.DECORATED);          // Optional
+                stage.setTitle("Invoice Preview");
+                stage.setScene(new Scene(root));
+                stage.setResizable(false);
+                stage.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            System.out.println("No invoice selected");
+        }
+    }
     @FXML
     void onRefresh(MouseEvent event) {
         loadFromDB();
@@ -183,15 +128,15 @@ public class ShowInvoices implements Initializable {
     void onSellProducts(MouseEvent event) {
         try {
             root = FXMLLoader.load(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/SelectCustomerType.fxml"));
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setHeight(700);
-            stage.setWidth(1210);
+            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
+            stage.setHeight(700);
+            stage.setWidth(1210);
             stage.setResizable(false);
             stage.show();
-        } catch (IOException e) {
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -199,15 +144,15 @@ public class ShowInvoices implements Initializable {
     void onSupplierButton(MouseEvent event) {
         try {
             root = FXMLLoader.load(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/viewSuppliers.fxml"));
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setHeight(700);
-            stage.setWidth(1210);
+            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
+            stage.setHeight(700);
+            stage.setWidth(1210);
             stage.setResizable(false);
             stage.show();
-        } catch (IOException e) {
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -215,22 +160,67 @@ public class ShowInvoices implements Initializable {
     void onUpdateProducts(MouseEvent event) {
         try {
             root = FXMLLoader.load(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/ManageProducts.fxml"));
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setHeight(700);
-            stage.setWidth(1210);
+            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
+            stage.setHeight(700);
+            stage.setWidth(1210);
             stage.setResizable(false);
             stage.show();
-        } catch (NullPointerException e) {
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
+    @FXML
+    void onBuyProduct(MouseEvent event) {
+        try {
+            root = FXMLLoader.load(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/SelectSupplierType.fxml"));
+            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setHeight(700);
+            stage.setWidth(1210);
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void onDeleteButton(MouseEvent event) {
+        System.out.println("🗑️ Delete button clicked");
 
+        ObservableList<String> selectedRow = tblInvoices.getSelectionModel().getSelectedItem();
+
+        if (selectedRow != null) {
+            String transactionId = selectedRow.get(0); // Assuming first column is transaction ID
+
+            String deleteSQL = "DELETE FROM temp_invoice WHERE transaction_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteSQL)) {
+                pstmt.setString(1, transactionId);
+                int rows = pstmt.executeUpdate();
+
+                if (rows > 0) {
+                    System.out.println("Deleted transaction: " + transactionId);
+                    loadFromDB();
+                } else {
+                    System.out.println("Could not delete transaction.");
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            System.out.println("No invoice selected for deletion.");
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tblInvoices.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        System.out.println("Invoices screen loaded");
+	  
         loadFromDB();
     }
 }

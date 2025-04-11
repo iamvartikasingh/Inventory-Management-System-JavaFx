@@ -98,15 +98,7 @@
         <Pane layoutX="293.0" layoutY="129.0" prefHeight="428.0" prefWidth="892.0" styleClass="table_pane" stylesheets="@../CSS/styles.css">
             <children>
                 <TableView fx:id="tblInvoices" layoutX="12.0" prefHeight="372.0" prefWidth="867.0" styleClass="table_properties" stylesheets="@../CSS/styles.css">
-                    <columns>
-                        <TableColumn prefWidth="75.0" text="User ID" />
-                        <TableColumn prefWidth="157.0" text="Username" />
-                        <TableColumn prefWidth="105.0" text="First Name" />
-                        <TableColumn prefWidth="111.0" text="Last Name" />
-                        <TableColumn prefWidth="122.0" text="NIC" />
-                        <TableColumn prefWidth="138.0" text="Position" />
-                        <TableColumn prefWidth="158.0" text="Contact Number" />
-                    </columns>
+          
                 </TableView>
                 <Button layoutX="613.0" layoutY="381.0" mnemonicParsing="false" onMouseClicked="#onOpenButton" prefHeight="31.0" prefWidth="121.0" style="-fx-background-color: #5E7AC7FF;" stylesheets="@../CSS/styles.css" text="Open">
                     <styleClass>
