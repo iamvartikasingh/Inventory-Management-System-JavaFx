@@ -19,7 +19,7 @@
    <children>
       <ImageView fitHeight="742.0" fitWidth="1234.0" layoutX="-18.0" layoutY="-24.0" pickOnBounds="true">
          <image>
-            <Image url="@Images/20bd1d2760182382257fc4494595b8c1.jpg" />
+            <Image url="@Images/Image1.png" />
          </image>
          <effect>
             <GaussianBlur radius="6.29" />
@@ -72,7 +72,7 @@
             </Group>
             <ImageView fitHeight="213.0" fitWidth="247.0" layoutX="56.0" layoutY="77.0" pickOnBounds="true" styleClass="shadow">
                <image>
-                  <Image url="@Images/logoFinal2.png" />
+                  <Image url="@Images/800c95a3-5583-4213-8d28-814a1f21bbf0.png" />
                </image>
             </ImageView>
          </children>

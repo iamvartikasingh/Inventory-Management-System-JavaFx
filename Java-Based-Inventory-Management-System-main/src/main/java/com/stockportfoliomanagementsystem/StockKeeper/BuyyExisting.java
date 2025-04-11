@@ -340,18 +340,17 @@ public class BuyyExisting implements Initializable {
                     throw new RuntimeException(e);
                 }
 
-                String sql = "INSERT INTO transactions_sup (transaction_id,Date_, Qty, Price, Total, S_ID, P_ID)\n" +
-                        "VALUES\n" +
-                        "(?,?,?,?,?,?,?)";
+                String sql = "INSERT INTO transactions_sup (transaction_id, Date_, Qty, Total, SupplierID, StockID) VALUES (?, ?, ?, ?, ?, ?)";
                 try {
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, String.valueOf(numericId + 1));
-                    pstmt.setDate(2, Date.valueOf(LocalDate.now()));
-                    pstmt.setInt(3, Integer.parseInt(cartItem2.get(5)));
-                    pstmt.setDouble(4, Double.parseDouble(cartItem2.get(2)));
-                    pstmt.setDouble(5, Double.parseDouble(cartItem2.get(2)) * Integer.parseInt(cartItem2.get(5)));
-                    pstmt.setString(6, index);
-                    pstmt.setString(7, cartItem2.get(0));
+                	PreparedStatement pstmt = conn.prepareStatement(sql);
+                	pstmt.setString(1, String.valueOf(numericId + 1)); // transaction_id
+                	pstmt.setDate(2, Date.valueOf(LocalDate.now()));   // Date_
+                	pstmt.setInt(3, Integer.parseInt(cartItem2.get(5))); // Qty
+                	double priceTaken = Double.parseDouble(cartItem2.get(2));
+                	int qty = Integer.parseInt(cartItem2.get(5));
+                	pstmt.setDouble(4, priceTaken * qty);              // Total
+                	pstmt.setString(5, index);                         // SupplierID
+                	pstmt.setString(6, cartItem2.get(0));              // StockID
 
                     pstmt.executeUpdate();
 
@@ -359,21 +358,19 @@ public class BuyyExisting implements Initializable {
                     throw new RuntimeException(e);
                 }
 
-                String sql2 = "INSERT INTO temp_invoice_sup (transaction_id,Date_, Qty, Price, Total, S_ID, P_ID)\n" +
-                        "VALUES\n" +
-                        "(?,?,?,?,?,?,?)";
+                String sql2 = "INSERT INTO temp_invoice_sup (transaction_id, Date_, Qty, Total, SupplierID, StockID) VALUES (?, ?, ?, ?, ?, ?)";
                 try {
                     PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-                    pstmt2.setString(1, String.valueOf(numericId + 1));
-                    pstmt2.setDate(2, Date.valueOf(LocalDate.now()));
-                    pstmt2.setInt(3, Integer.parseInt(cartItem2.get(5)));
-                    pstmt2.setDouble(4, Double.parseDouble(cartItem2.get(2)));
-                    pstmt2.setDouble(5, Double.parseDouble(cartItem2.get(2)) * Integer.parseInt(cartItem2.get(5)));
-                    pstmt2.setString(6, index);
-                    pstmt2.setString(7, cartItem2.get(0));
+                    pstmt2.setString(1, String.valueOf(numericId + 1)); // transaction_id
+                    pstmt2.setDate(2, Date.valueOf(LocalDate.now()));   // Date_
+                    int qty = Integer.parseInt(cartItem2.get(5));
+                    double price = Double.parseDouble(cartItem2.get(2));
+                    pstmt2.setInt(3, qty);                             // Qty
+                    pstmt2.setDouble(4, price * qty);                  // Total
+                    pstmt2.setString(5, index);                        // SupplierID
+                    pstmt2.setString(6, cartItem2.get(0));             // StockID
 
                     pstmt2.executeUpdate();
-
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
