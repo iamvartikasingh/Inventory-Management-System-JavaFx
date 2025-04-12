@@ -12,7 +12,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="anchorPane_newWindow2" stylesheets="@../CSS/styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.stockportfoliomanagementsystem.StockKeeper.PaymentRecieptCustomer">
    <children>
-      <Pane layoutX="16.0" layoutY="14.0" prefHeight="592.0" prefWidth="818.0" styleClass="container_" stylesheets="@../CSS/styles.css">
+      <Pane layoutX="16.0" layoutY="14.0" prefHeight="592.0" prefWidth="818.0" style="-fx-background-color: #f5faff">
          <children>
             <Label layoutX="39.0" layoutY="69.0" text="Customer ID">
                <font>
@@ -34,12 +34,12 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="88.0" layoutY="11.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Book Nook" textAlignment="CENTER" textFill="#c0e8fb">
+            <Label layoutX="88.0" layoutY="11.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Invatron" textAlignment="CENTER" textFill="#1d5882">
                <font>
                   <Font name="Bookshelf Symbol 7" size="34.0" />
                </font>
             </Label>
-            <ImageView fitHeight="54.0" fitWidth="66.0" layoutX="14.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" styleClass="shadow">
+            <ImageView fitHeight="54.0" fitWidth="66.0" layoutX="14.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-color: #1d5882">
                <image>
                   <Image url="@../Images/logoIcon2.png" />
                </image>

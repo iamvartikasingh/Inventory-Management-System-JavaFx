@@ -26,7 +26,7 @@ f.anchorPane {
 
 .login-button {
     -fx-background-color: #23729E;
-    -fx-text-fill: #0E2C3F;
+    -fx-text-fill: #a2e5fa;
     -fx-font-weight: bold;
     -fx-font-size: 14;
 }
@@ -98,8 +98,12 @@ f.anchorPane {
 /* Effects */
 .shadow {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10.0,0.0,0.0,10.0);
+	
 }
-
+.shadowtitle {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10.0,0.0,0.0,10.0);
+	-fx-text-fill: #edf9fc;
+}
 /* Buttons + Selections */
 .selected-button {
     -fx-background-color: transparent;
@@ -182,9 +186,16 @@ f.anchorPane {
     -fx-text-fill: white;
 }
 .container_Button {
-    -fx-background-color: transparent;
-    -fx-background-radius: 15;
-    -fx-border-radius: 15;
+
+	    -fx-background-color: rgba(147, 202, 255, 0.25); /* light transparent blue */
+	    -fx-background-radius: 15;
+	    -fx-border-radius: 15;
+	
+}
+
+.container_Button:hover {
+    -fx-background-color: rgba(35, 114, 158, 0.5); /* slightly deeper on hover */
+    -fx-text-fill: white;
 }
 .text_center {
     -fx-text-alignment: center;

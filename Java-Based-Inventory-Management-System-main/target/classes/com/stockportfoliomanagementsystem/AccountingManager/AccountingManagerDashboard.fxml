@@ -35,7 +35,7 @@
                                                       <Font name="Calibri" size="27.0" />
                                                   </font>
                                               </Label>
-                                    <Label layoutX="51.0" layoutY="-1.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Generate" textFill="#94ffeb">
+                                    <Label layoutX="51.0" layoutY="-1.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Generate" textFill="#1d5882">
                                        <font>
                                           <Font name="Calibri" size="27.0" />
                                        </font>

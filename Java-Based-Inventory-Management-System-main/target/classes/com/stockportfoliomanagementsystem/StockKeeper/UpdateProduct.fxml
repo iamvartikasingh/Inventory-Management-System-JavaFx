@@ -13,7 +13,7 @@
 
 <AnchorPane prefHeight="705.0" prefWidth="1210.0" styleClass="anchorPane" stylesheets="@../CSS/styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.stockportfoliomanagementsystem.StockKeeper.UpdateProduct">
     <children>
-        <Pane layoutX="-2.0" layoutY="-7.0" prefHeight="667.0" prefWidth="280.0" style="-fx-background-color: #075E54;">
+        <Pane layoutX="-2.0" layoutY="-7.0" prefHeight="667.0" prefWidth="280.0" style="-fx-background-color: #1d5882;">
             <children>
                 <Label layoutX="96.0" layoutY="20.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Book Nook" textAlignment="CENTER" textFill="#c0e8fb">
                     <font>

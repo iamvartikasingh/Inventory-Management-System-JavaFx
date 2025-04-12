@@ -22,7 +22,7 @@ public class Main extends Application {
         stage.setHeight(700);
         stage.setWidth(1200);
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Book Nook");
+        stage.setTitle("Invatron");
 
         stage.setResizable(false);
 
