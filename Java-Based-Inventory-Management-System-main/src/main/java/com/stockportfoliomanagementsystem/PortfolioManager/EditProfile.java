@@ -151,7 +151,7 @@ public class EditProfile implements Initializable{
         NIC = txtNIC.getText();
         contact = txtContact.getText();
 
-            if ((userId.isEmpty()) || (userName.isEmpty()) || (pwd.isEmpty()) || (Fname.isEmpty()) || (Lname.isEmpty()) || (NIC.isEmpty()) || (contact.isEmpty())) {
+        if (isEmpty(userId) || isEmpty(userName) || isEmpty(pwd) || isEmpty(Fname) || isEmpty(Lname) || isEmpty(NIC) || isEmpty(contact)) {
                 MainController.fillAllTheFieldsAlert();
             }else {
                     if (isEmailValid(userName)) {
@@ -195,7 +195,9 @@ public class EditProfile implements Initializable{
         }
     }
 
-
+    private boolean isEmpty(String s) {
+        return s == null || s.trim().isEmpty();
+    }
     @FXML
     void onClearButton(MouseEvent event) {
         txtUserName.setText("");
