@@ -95,6 +95,7 @@
                         <TableColumn prefWidth="122.0" text="NIC" />
                         <TableColumn prefWidth="138.0" text="Position" />
                         <TableColumn prefWidth="158.0" text="Contact Number" />
+                            <TableColumn prefWidth="158.0" text="Email" />
                     </columns>
                 </TableView>
                 <Button layoutX="504.0" layoutY="380.0" mnemonicParsing="false" onMouseClicked="#onUpdateButton" prefHeight="31.0" prefWidth="121.0" style="-fx-background-color: #5E7AC7FF;" stylesheets="@../CSS/styles.css" text="Update">

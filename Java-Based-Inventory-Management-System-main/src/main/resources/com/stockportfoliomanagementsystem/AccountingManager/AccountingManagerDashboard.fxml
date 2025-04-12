@@ -35,7 +35,7 @@
                                                       <Font name="Calibri" size="27.0" />
                                                   </font>
                                               </Label>
-                                    <Label layoutX="51.0" layoutY="-1.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Generate" textFill="#1d5882">
+                                    <Label layoutX="51.0" layoutY="-1.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Generate" textFill="#94ffeb">
                                        <font>
                                           <Font name="Calibri" size="27.0" />
                                        </font>
@@ -145,7 +145,7 @@
             </children>
         </Pane>
         <Pane layoutX="521.0" layoutY="31.0" prefHeight="3.0" prefWidth="650.0" styleClass="line-color" stylesheets="@../CSS/styles.css" />
-        <Label layoutX="296.0" layoutY="15.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Accounting Manager" textFill="#94ffeb">
+        <Label layoutX="296.0" layoutY="15.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Accounting Manager" textFill="#1d5882">
             <font>
                 <Font name="Calibri" size="24.0" />
             </font>

@@ -59,6 +59,10 @@ public class AddNewCustomer implements Initializable {
     private String cusContact;
     private String max;
     private int numericId;
+    @FXML
+    private TextField txtCusEmail;
+
+    private String cusEmail;
 
     protected static String customerType;
 
@@ -79,41 +83,45 @@ public class AddNewCustomer implements Initializable {
         cusAddress = txtCusAddress.getText();
         cusContact = txtCusContact.getText();
         cusID = txtCusID.getText();
+        cusEmail = txtCusEmail.getText();
 
         if((cusName.isEmpty()||cusAddress.isEmpty()||cusContact.isEmpty())) {
             MainController.fillAllTheFieldsAlert();
         }else{
-            if(MainController.isPhoneNumberValid(cusContact)){
-                String sql = "INSERT INTO customer (C_ID, C_Name, C_Location, C_Contact) VALUES (?, ?, ?, ?)";
+        	if (MainController.isPhoneNumberValid(cusContact)) {
+        	    String sql = "INSERT INTO customer (C_ID, name, address, contact, email) VALUES (?, ?, ?, ?, ?)";
 
-                try {
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, String.valueOf(numericId+1));
-                    pstmt.setString(2, cusName);
-                    pstmt.setString(3, cusAddress);
-                    pstmt.setString(4, cusContact);
-                    pstmt.executeUpdate();
+        	    try {
+        	        PreparedStatement pstmt = conn.prepareStatement(sql);
+        	        pstmt.setString(1, String.valueOf(numericId + 1));
+        	        pstmt.setString(2, cusName);
+        	        pstmt.setString(3, cusAddress);
+        	        pstmt.setString(4, cusContact);
+        	        pstmt.setString(5, cusEmail); 
 
-                } catch (SQLException e) {
-                    System.out.println("Error: " + e.getMessage());
-                }
+        	        pstmt.executeUpdate();
+        	    } catch (SQLException e) {
+        	        System.out.println("Error: " + e.getMessage());
+        	    }
+        	    if (!cusEmail.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        	        MainController.invalidEmailAlert(); // You can define this alert in your MainController
+        	        return;
+        	    }
+        	    lblSuccess.setText("Customer Added Successfully");
+        	    setCustomerType("New");
+        	    SelectExistingCustomer.customerType = null;
 
-                lblSuccess.setText("Customer Added Successfully");
-                setCustomerType("New");
-                SelectExistingCustomer.customerType = null;
-
-
-                root = FXMLLoader.load(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/SellExisting.fxml"));
-                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setHeight(700);
-                stage.setWidth(1210);
-                scene = new Scene(root);
-                stage.setScene(scene);
-                stage.setResizable(false);
-                stage.show();
-            }else{
-                MainController.invalidPhoneNumberAlert();
-            }
+        	    root = FXMLLoader.load(getClass().getResource("/com/stockportfoliomanagementsystem/StockKeeper/SellExisting.fxml"));
+        	    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        	    stage.setHeight(700);
+        	    stage.setWidth(1210);
+        	    scene = new Scene(root);
+        	    stage.setScene(scene);
+        	    stage.setResizable(false);
+        	    stage.show();
+        	} else {
+        	    MainController.invalidPhoneNumberAlert();
+        	}
         }
     }
 

@@ -131,6 +131,11 @@
                         <Font size="16.0" />
                      </font>
                   </TextField>
+                   <TextField fx:id="txtCusEmail" layoutX="157.0" layoutY="95.0" prefHeight="25.0" prefWidth="361.0" styleClass="shadow" stylesheets="@../CSS/styles.css">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
                   <Label layoutY="143.0" prefHeight="35.0" prefWidth="121.0" styleClass="shadow" stylesheets="@../CSS/styles.css" text="Address">
                      <font>
                         <Font name="System Bold" size="16.0" />

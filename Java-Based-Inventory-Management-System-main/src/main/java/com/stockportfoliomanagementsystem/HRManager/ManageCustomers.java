@@ -56,8 +56,7 @@ public class ManageCustomers implements Initializable {
         columns.clear();
 
         // Define fixed column names
-        String[] columnNames = {"Customer Id","Customer Name","Address","Contact Number"};
-
+        String[] columnNames = {"Customer Id","Customer Name","Customer Address","Contact Number", "Email"};
         double columnWidth = (tblCustomers.getPrefWidth()) / (columnNames.length)-1;
 
         // Add the columns to the TableView with fixed names
@@ -69,7 +68,7 @@ public class ManageCustomers implements Initializable {
             columns.add(column);
         }
 
-        String sql = "SELECT C_ID, name, address, contact FROM customer"; // Replace with your table name
+        String sql = "SELECT C_ID, name, address, contact, email FROM customer"; // Replace with your table name
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();

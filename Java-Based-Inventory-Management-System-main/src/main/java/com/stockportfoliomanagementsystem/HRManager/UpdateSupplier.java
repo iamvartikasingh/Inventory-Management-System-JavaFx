@@ -150,7 +150,7 @@ public class UpdateSupplier implements Initializable {
                     System.out.println("Error: " + e.getMessage());
                 }
                 System.out.println("customer table updated");
-                lblSuccess.setText("Customer table updated !");
+                lblSuccess.setText("Supplier table updated !");
             }else{
                 MainController.invalidPhoneNumberAlert();
             }

@@ -39,7 +39,7 @@ public class viewCustomers implements Initializable {
         columns.clear();
 
         // Define fixed column names
-        String[] columnNames = {"Customer Id","Customer Name","Customer Address","Contact Number"};
+        String[] columnNames = {"Customer Id","Customer Name","Customer Address","Contact Number", "Email"};
 
         double columnWidth = (tblCustomers.getPrefWidth()) / (columnNames.length)-2;
 

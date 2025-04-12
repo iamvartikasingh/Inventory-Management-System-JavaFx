@@ -1,5 +1,7 @@
 package com.stockportfoliomanagementsystem.StockKeeper;
 
+
+import com.stockportfoliomanagementsystem.EmailUtil;
 import com.stockportfoliomanagementsystem.MySqlCon;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -339,5 +341,73 @@ public class PaymentRecieptCustomer implements Initializable{
         captureScne();
         showPDF();
     }
+    @FXML
+//    void onBtnEmailInvoice(MouseEvent event) {
+//        captureScne(); // generate invoice PDF (still useful even without attachment)
+//
+//        // Fetch customer email
+//        String email = null;
+//        String query = "SELECT email FROM customer WHERE C_ID = ?";
+//        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+//            pstmt.setString(1, cid);
+//            ResultSet rs = pstmt.executeQuery();
+//            if (rs.next()) {
+//                email = rs.getString("email");
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return;
+//        }
+//
+//        if (email == null || email.trim().isEmpty()) {
+//            System.out.println("No email found for customer " + cid);
+//            return;
+//        }
+//
+//        // Compose email content
+//        String subject = "Invoice from Invatron - " + lblInvoiceID.getText();
+//        String body = "Dear " + cName + ",\n\n"
+//                + "Thank you for your purchase. Below are your invoice details:\n\n"
+//                + "Invoice ID: " + lblInvoiceID.getText() + "\n"
+//                + "Customer ID: " + cid + "\n"
+//                + "Name: " + cName + "\n"
+//                + "Contact: " + cContact + "\n"
+//                + "Address: " + cAddress + "\n"
+//                + "Date: " + LocalDate.now() + "\n"
+//                + "Total: " + txtTotal.getText() + "\n\n"
+//                + "If you need the PDF copy, please contact our support.\n\n"
+//                + "Best regards,\nInvatron Team";
+//
+//        EmailUtil.sendInvoiceEmail(email, subject, body);
+//    }
+    
+    
+    
+  
+    void onBtnEmailInvoice(MouseEvent event) {
+        captureScne(); // makes the PDF and sets pdfFilePath
 
+        String email = null;
+        try (PreparedStatement pstmt = conn.prepareStatement("SELECT email FROM customer WHERE C_ID = ?")) {
+            pstmt.setString(1, cid);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                email = rs.getString("email");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        if (email == null || email.isEmpty()) {
+            System.out.println("Email not found for customer: " + cid);
+            return;
+        }
+
+        String subject = "Your Invoice from Invatron - " + lblInvoiceID.getText();
+        String message = "Dear " + cName + ",\n\nPlease find your invoice attached.\n\nRegards,\nInvatron Team";
+        File invoiceFile = new File(pdfFilePath);
+
+        EmailUtil.sendInvoiceWithAttachment(email, subject, message, invoiceFile);
+    }
 }

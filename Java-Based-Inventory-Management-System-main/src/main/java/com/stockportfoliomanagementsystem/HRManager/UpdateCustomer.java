@@ -48,7 +48,10 @@ public class UpdateCustomer implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
+    @FXML
+    private TextField txtCusEmail;
 
+    private String cusEmail;
     private String cusID = ManageCustomers.getSelectedCustomer();
 
     @Override
@@ -64,6 +67,7 @@ public class UpdateCustomer implements Initializable {
     	        cusName = rs.getString("name");
     	        cusAddress = rs.getString("address");
     	        cusContact = rs.getString("contact");
+    	        cusEmail = rs.getString("email");
     	    }
     	} catch (SQLException e) {
     	    throw new RuntimeException(e);
@@ -72,6 +76,7 @@ public class UpdateCustomer implements Initializable {
         txtCusName.setText(cusName);
         txtCusAddress.setText(cusAddress);
         txtCusContact.setText(cusContact);
+        txtCusEmail.setText(cusEmail);
 
         txtCusID.setEditable(false);
     }
@@ -104,35 +109,42 @@ public class UpdateCustomer implements Initializable {
         } catch (IOException e) {
         }
     }
-
     @FXML
     void onUpdateButton(MouseEvent event) {
-
         cusName = txtCusName.getText();
         cusAddress = txtCusAddress.getText();
         cusContact = txtCusContact.getText();
+        cusEmail = txtCusEmail.getText();
 
-        if((cusName.isEmpty())||(cusAddress.isEmpty()||(cusContact.isEmpty()))){
+        if (cusName.isEmpty() || cusAddress.isEmpty() || cusContact.isEmpty()) {
             MainController.fillAllTheFieldsAlert();
-        }else {
-            if(MainController.isPhoneNumberValid(cusContact)) {
-                System.out.println("Valid Phone Number");
-                String sql = "UPDATE customer SET name = ?, address = ?, contact = ? WHERE C_ID = ?";
-                try {
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, cusName);
-                    pstmt.setString(2, cusAddress);
-                    pstmt.setString(3, cusContact);
-                    pstmt.setString(4, cusID);
-                    pstmt.executeUpdate();
-                } catch (SQLException e) {
-                    System.out.println("Error: " + e.getMessage());
-                }
-                System.out.println("customer table updated");
-                lblSuccess.setText("Customer table updated !");
-            }else{
-                MainController.invalidPhoneNumberAlert();
+            return;
+        }
+
+        if (!MainController.isPhoneNumberValid(cusContact)) {
+            MainController.invalidPhoneNumberAlert();
+            return;
+        }
+
+        String sql = "UPDATE customer SET name = ?, address = ?, contact = ?, email = ? WHERE C_ID = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, cusName);
+            pstmt.setString(2, cusAddress);
+            pstmt.setString(3, cusContact);
+            pstmt.setString(4, cusEmail);   // ✅ fix here
+            pstmt.setString(5, cusID);      // ✅ fix here
+            int rows = pstmt.executeUpdate();
+
+            if (rows > 0) {
+                lblSuccess.setText("Customer table updated!");
+                System.out.println("Customer table updated");
+            } else {
+                System.out.println("Update failed: No rows affected");
             }
+
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 

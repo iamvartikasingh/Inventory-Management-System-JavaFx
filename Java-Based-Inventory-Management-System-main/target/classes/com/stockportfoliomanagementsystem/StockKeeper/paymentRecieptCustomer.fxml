@@ -106,6 +106,7 @@
                   </TableView>
                </children>
             </Pane>
+            <Button fx:id="btnEmailInvoice" layoutX="600.0" layoutY="553.0"  styleClass="login-button" text="Email Invoice" stylesheets="@../CSS/styles.css" onMouseClicked="#onBtnEmailInvoice" />
             <Button layoutX="736.0" layoutY="553.0" mnemonicParsing="false" onMouseClicked="#onBtnPDF" styleClass="login-button" stylesheets="@../CSS/styles.css" text="Get PDF" />
          </children>
       </Pane>

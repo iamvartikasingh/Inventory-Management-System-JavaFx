@@ -4,6 +4,7 @@ com/stockportfoliomanagementsystem/AccountingManager/ShowSuppliers.class
 com/stockportfoliomanagementsystem/PortfolioManager/viewSuppliers.class
 com/stockportfoliomanagementsystem/StockKeeper/SelectSupplierType.class
 com/stockportfoliomanagementsystem/HRManager/UpdateCustomer.class
+com/stockportfoliomanagementsystem/EmailUtil$1.class
 com/stockportfoliomanagementsystem/StockKeeper/PaymentRecieptCustomer.class
 com/stockportfoliomanagementsystem/AccountingManager/ShowStock.class
 com/stockportfoliomanagementsystem/HRManager/HRManagerController.class
@@ -39,5 +40,6 @@ com/stockportfoliomanagementsystem/StockKeeper/AddNewSupplier.class
 com/stockportfoliomanagementsystem/HRManager/UpdateSupplier.class
 com/stockportfoliomanagementsystem/StockKeeper/StockKeeperController.class
 com/stockportfoliomanagementsystem/StockKeeper/SellExisting.class
+com/stockportfoliomanagementsystem/EmailUtil.class
 com/stockportfoliomanagementsystem/PortfolioManager/PortfolioManagerController.class
 com/stockportfoliomanagementsystem/PortfolioManager/EditProfile.class

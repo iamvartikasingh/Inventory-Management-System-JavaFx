@@ -52,7 +52,10 @@ public class AddCustomer implements Initializable{
     private Stage stage;
     private Scene scene;
     private Parent root;
+    @FXML
+    private TextField txtCusEmail;
 
+    private String cusEmail;
     private String max;
     private int numericId;
 
@@ -103,29 +106,34 @@ public class AddCustomer implements Initializable{
     }
     @FXML
     void onAddButton(MouseEvent event) {
-        cusName = txtCusName.getText();
-        cusAddress = txtCusAddress.getText();
-        cusContact = txtCusContact.getText();
-        cusID = txtCusID.getText();
+    	 cusName = txtCusName.getText();
+         cusAddress = txtCusAddress.getText();
+         cusContact = txtCusContact.getText();
+         cusID = txtCusID.getText();
+         cusEmail = txtCusEmail.getText();
 
         if((cusName.isEmpty())||(cusAddress.isEmpty())||(cusContact.isEmpty())||(cusID.isEmpty())) {
             MainController.fillAllTheFieldsAlert();
         }else{
-            if(MainController.isPhoneNumberValid(cusContact)) {
-                System.out.println("Valid");
-                String sql = "INSERT INTO customer (C_ID, name, address, contact) VALUES (?, ?, ?, ?)";
+        	if (MainController.isPhoneNumberValid(cusContact)) {
+        	    String sql = "INSERT INTO customer (C_ID, name, address, contact, email) VALUES (?, ?, ?, ?, ?)";
 
-                try {
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, cusID); 
-                    pstmt.setString(2, cusName);
-                    pstmt.setString(3, cusAddress);
-                    pstmt.setString(4, cusContact);
-                    pstmt.executeUpdate();
+        	    try {
+        	        PreparedStatement pstmt = conn.prepareStatement(sql);
+        	        pstmt.setString(1, String.valueOf(numericId + 1));
+        	        pstmt.setString(2, cusName);
+        	        pstmt.setString(3, cusAddress);
+        	        pstmt.setString(4, cusContact);
+        	        pstmt.setString(5, cusEmail); 
 
-                } catch (SQLException e) {
-                    System.out.println("Error: " + e.getMessage());
-                }
+        	        pstmt.executeUpdate();
+        	    } catch (SQLException e) {
+        	        System.out.println("Error: " + e.getMessage());
+        	    }
+        	    if (!cusEmail.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        	        MainController.invalidEmailAlert(); // You can define this alert in your MainController
+        	        return;
+        	    }
                 lblSuccess.setText("Customer Added Successfully");
             }else{
                 MainController.invalidPhoneNumberAlert();
