@@ -1,6 +1,8 @@
 package com.stockportfoliomanagementsystem.PortfolioManager;
 
 import com.stockportfoliomanagementsystem.MySqlCon;
+import com.stockportfoliomanagementsystem.Navigator;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -52,6 +54,7 @@ public class ManageUsersCtrl implements Initializable {
     @FXML
     void onCustomerButton(MouseEvent event) {
         try {
+        	
             root = FXMLLoader.load(getClass().getResource("/com/stockportfoliomanagementsystem/PortfolioManager/viewCustomers.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setHeight(700);
@@ -273,4 +276,8 @@ public class ManageUsersCtrl implements Initializable {
         stage.setResizable(false);
         stage.show();
     }
+    @FXML
+    private void goBack(MouseEvent event) {
+	    Navigator.goBack(event); 
+	}
 }

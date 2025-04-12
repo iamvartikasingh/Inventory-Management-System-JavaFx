@@ -1,7 +1,10 @@
 package com.stockportfoliomanagementsystem.PortfolioManager;
 
 import com.stockportfoliomanagementsystem.MainController;
+
 import com.stockportfoliomanagementsystem.MySqlCon;
+import com.stockportfoliomanagementsystem.Navigator;
+
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +33,10 @@ import java.io.*;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
-
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 public class PortfolioManagerController implements Initializable{
 
     Connection conn = MySqlCon.MysqlMethod();
@@ -338,9 +344,18 @@ public class PortfolioManagerController implements Initializable{
         } catch (NullPointerException e) {
         }
     }
+    
+    @FXML
+    void onBackButton(MouseEvent event) {
+        MainController.goBack((Stage)((Node)event.getSource()).getScene().getWindow());
+    }
 
     @FXML
     void onRefreshButton(MouseEvent event) {
         loadFromDB();
     }
+    @FXML
+    private void goBack(MouseEvent event) {
+	    Navigator.goBack(event); 
+	}
 }

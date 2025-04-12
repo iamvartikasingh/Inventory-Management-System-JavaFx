@@ -2,6 +2,8 @@ package com.stockportfoliomanagementsystem.PortfolioManager;
 
 import com.stockportfoliomanagementsystem.MainController;
 import com.stockportfoliomanagementsystem.MySqlCon;
+import com.stockportfoliomanagementsystem.Navigator;
+
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -139,6 +141,10 @@ public class AddUser implements Initializable {
             }
         }
     }
+    public void goBack(MouseEvent event) {
+        Navigator.goBack(event);
+    }
+    
     @FXML
     void onInsertButton(MouseEvent event) {
 

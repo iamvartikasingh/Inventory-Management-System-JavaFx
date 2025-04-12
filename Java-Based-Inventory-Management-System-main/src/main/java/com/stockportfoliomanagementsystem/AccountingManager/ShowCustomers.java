@@ -53,7 +53,6 @@ public class ShowCustomers implements Initializable {
         ObservableList<TableColumn<ObservableList<String>, ?>> columns = tblCustomers.getColumns();
         columns.clear();
 
-        // Define fixed column names
         String[] columnNames = {"Customer Id","Customer Name","Customer Address","Contact Number"};
 
         double columnWidth = (tblCustomers.getPrefWidth()) / (columnNames.length)-2;
@@ -80,7 +79,17 @@ public class ShowCustomers implements Initializable {
                 }
                 data.add(row);
             }
-
+            for (int i = 0; i < data.size() - 1; i++) {
+                for (int j = 0; j < data.size() - i - 1; j++) {
+                    String name1 = data.get(j).get(1);
+                    String name2 = data.get(j + 1).get(1);
+                    if (name1.compareToIgnoreCase(name2) > 0) {
+                        ObservableList<String> temp = data.get(j);
+                        data.set(j, data.get(j + 1));
+                        data.set(j + 1, temp);
+                    }
+                }
+            }
             tblCustomers.setItems(data);
         } catch (SQLException e) {
             e.printStackTrace();

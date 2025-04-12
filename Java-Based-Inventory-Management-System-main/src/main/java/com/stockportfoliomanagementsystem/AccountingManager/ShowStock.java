@@ -83,7 +83,21 @@ public class ShowStock implements Initializable {
                 }
                 data.add(row);
             }
-
+            for (int i = 0; i < data.size() - 1; i++) {
+                for (int j = 0; j < data.size() - i - 1; j++) {
+                    try {
+                        double price1 = Double.parseDouble(data.get(j).get(2));
+                        double price2 = Double.parseDouble(data.get(j + 1).get(2));
+                        if (price1 > price2) {
+                            ObservableList<String> temp = data.get(j);
+                            data.set(j, data.get(j + 1));
+                            data.set(j + 1, temp);
+                        }
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace(); // or handle gracefully
+                    }
+                }
+            }
             tblStock.setItems(data);
         } catch (SQLException e) {
             e.printStackTrace();

@@ -68,7 +68,7 @@ public class ManageCustomers implements Initializable {
             columns.add(column);
         }
 
-        String sql = "SELECT C_ID, name, address, contact, email FROM customer"; // Replace with your table name
+        String sql = "SELECT C_ID, name, address, contact, email FROM customer";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();

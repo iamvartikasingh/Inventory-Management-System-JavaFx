@@ -110,9 +110,12 @@ public class StockKeeperController implements Initializable {
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
-        } catch (IOException e) {
+         } catch (IOException e) {
+            e.printStackTrace(); // Log the issue!
         } catch (NullPointerException e) {
+            e.printStackTrace();
         }
+        System.out.println(" Loaded viewCustomers.fxml successfully");
     }
 
 
@@ -125,7 +128,7 @@ public class StockKeeperController implements Initializable {
 
             // This is where your controller's initialize() gets triggered
             ShowInvoices controller = loader.getController();
-            System.out.println("✅ ShowInvoices Controller initialized");
+            System.out.println("ShowInvoices Controller initialized");
 
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);

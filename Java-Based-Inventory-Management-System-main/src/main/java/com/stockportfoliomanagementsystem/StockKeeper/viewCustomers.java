@@ -1,6 +1,7 @@
 package com.stockportfoliomanagementsystem.StockKeeper;
 
 import com.stockportfoliomanagementsystem.MySqlCon;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,10 +22,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class viewCustomers implements Initializable {
-
+	@FXML private javafx.scene.control.TextField txtSearch;
+	@FXML private javafx.scene.control.Button btnSearch;
+	@FXML private javafx.scene.control.Button btnReset;
     Connection conn = MySqlCon.MysqlMethod();
     @FXML
     private Stage stage;
@@ -32,18 +37,19 @@ public class viewCustomers implements Initializable {
     private Parent root;
     @FXML
     private TableView<ObservableList<String>> tblCustomers;
-
+    private Map<String, ObservableList<String>> customerMap = new HashMap<>();
+    private ObservableList<ObservableList<String>> allCustomerData = FXCollections.observableArrayList();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<TableColumn<ObservableList<String>, ?>> columns = tblCustomers.getColumns();
         columns.clear();
 
-        // Define fixed column names
+        
         String[] columnNames = {"Customer Id","Customer Name","Customer Address","Contact Number", "Email"};
 
         double columnWidth = (tblCustomers.getPrefWidth()) / (columnNames.length)-2;
 
-        // Add the columns to the TableView with fixed names
+        
         for (int i = 0; i < columnNames.length; i++) {
             final int columnIndex = i;
             TableColumn<ObservableList<String>, String> column = new TableColumn<>(columnNames[i]);
@@ -58,14 +64,18 @@ public class viewCustomers implements Initializable {
             ResultSet rs = pstmt.executeQuery();
 
             ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+            customerMap.clear(); // Clear previous data
+
             while (rs.next()) {
                 ObservableList<String> row = FXCollections.observableArrayList();
                 for (int i = 1; i <= columnNames.length; i++) {
                     row.add(rs.getString(i));
                 }
                 data.add(row);
+                customerMap.put(row.get(0), row); // Customer ID is key
             }
 
+            allCustomerData = data;
             tblCustomers.setItems(data);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -164,6 +174,21 @@ public class viewCustomers implements Initializable {
             stage.show();
         } catch (NullPointerException e) {
         } catch (IOException e) {
+        }
+    }
+    @FXML
+  
+    void onSearchClicked(MouseEvent event) {
+        String id = txtSearch.getText().trim();
+        if (id.isEmpty()) return;
+
+        ObservableList<String> resultRow = customerMap.get(id);
+        if (resultRow != null) {
+            ObservableList<ObservableList<String>> result = FXCollections.observableArrayList();
+            result.add(resultRow);
+            tblCustomers.setItems(result);
+        } else {
+            tblCustomers.setItems(FXCollections.observableArrayList()); // empty if not found
         }
     }
 }
